@@ -15,20 +15,22 @@ def handle_help(message):
 
 
 @bot.message_handler(commands=['show_city'])
+@bot.message_handler(commands=['show_city'])
 def handle_show_city(message):
     try:
-        city_name = message.text.split()[-1]
+        args = message.text.split()
+        city_name = args[1]
+        color = args[2] if len(args) > 2 else 'blue'
         img_path = 'city_map.png'
         
         if manager.get_coordinates(city_name):
-            manager.create_grapf(img_path, [city_name]) # Обрати внимание: create_grapf с буквой f, как у тебя в logic.py
+            manager.create_grapf(img_path, [city_name], color=color)
             with open(img_path, 'rb') as photo:
                 bot.send_photo(message.chat.id, photo)
         else:
             bot.send_message(message.chat.id, "Такого города нет в базе данных.")
     except IndexError:
-        bot.send_message(message.chat.id, "Пожалуйста, укажи название города после команды, например: /show_city London")
-    # Реализуй отрисовку города по запросу
+        bot.send_message(message.chat.id, "Использование: /show_city [город] [цвет (по желанию)]")
 
 
 @bot.message_handler(commands=['remember_city'])
